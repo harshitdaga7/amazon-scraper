@@ -16,7 +16,7 @@ base url : https://www.amazon.in/s?k=bags&crid=2M096C61O4MLT&qid=1653308124&spre
 
 **Note - you can access already scraped data in data folder**. 
 
-**Note - 20 pages were traversed from above given base url and fetched more than 200 products information**.  
+**Note - 20 pages were traversed from above given base url and fetched about 466 products information**.  
   
 
 ---
