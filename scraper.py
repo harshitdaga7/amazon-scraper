@@ -1,7 +1,9 @@
 from bs4 import BeautifulSoup
+import requests
 from urllib.request import urlopen
 import re
 import time
+import cloudscraper
 
 
 def is_not_empty_string(field):
@@ -15,9 +17,11 @@ def is_not_empty_string(field):
 
 def get_product_details_by_link(url):
 
-  time.sleep(2)
-  page = urlopen(url)
-  html = page.read().decode('utf-8')
+  
+  time.sleep(1) #added to prevent 503 error
+
+  scraper = cloudscraper.create_scraper()
+  html = scraper.get(url).text
   soup = BeautifulSoup(html,'html.parser')
 
   name_tag = soup.find(id = "productTitle")
@@ -38,8 +42,10 @@ def scraper(columns, url):
   data = {}
   for c in columns:
     data[c] =[]
-  page = urlopen(url)
-  html = page.read().decode("utf-8")
+
+
+  scraper = cloudscraper.create_scraper()
+  html = scraper.get(url).text
   soup = BeautifulSoup(html, "html.parser")
   products = soup.find_all('div',attrs={"data-asin": is_not_empty_string})
 
@@ -54,31 +60,18 @@ def scraper(columns, url):
       reviews_tag = prod.find("span",class_ = "a-size-base s-underline-text")
 
       name = str(name_tag.string) if name_tag else "NA"
-      link = str(link_tag['href']) if link_tag else "NA"
+      link = ("https://www.amazon.in" + str(link_tag['href'])) if link_tag else "NA"
       price = str(price_tag.string) if price_tag else "NA"
       rating = str(rating_tag.string).split(" ")[0] if rating_tag else "NA"
       reviews = str(reviews_tag.string) if reviews_tag else "NA"
       
 
       arr = [name,link,price,rating,reviews,"NA","NA","NA"]
-      
-      for i,c in enumerate(columns):
-        data[c].append(arr[i])
+      if link != "NA":
+        for i,c in enumerate(columns):
+          data[c].append(arr[i])
   print("completed primary information")
 
-  print("extracting detailed infomation")
-  for i,link in enumerate(data['URL']):
-    
-    print(f"extracting {i}th data")
-
-    detailed_product_data = get_product_details_by_link("https://www.amazon.in" + link)
-    
-    required_fields = ["Name","Description","ASIN","Manufacturer"]
-
-    for f in required_fields:
-      data[f][i] = detailed_product_data[f]
-  
-  print("completed detailed information")
   
   return data
 
