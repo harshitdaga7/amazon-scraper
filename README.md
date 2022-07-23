@@ -14,6 +14,8 @@ These are the fields which are scraped
 
 base url : https://www.amazon.in/s?k=bags&crid=2M096C61O4MLT&qid=1653308124&sprefix=ba%2Caps%2C283&ref=sr_pg_1
 
+final data - https://github.com/harshitdaga7/amazon-scraper/blob/main/data/master_data.csv
+
 **Note - you can access already scraped data in data folder**. 
 
 **Note - 20 pages were traversed from above given base url and fetched about 466 products information**.  
